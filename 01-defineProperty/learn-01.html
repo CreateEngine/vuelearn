@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <span id="container">1</span>
+    <button id="button">点击加 1</button>
+</body>
+<script>
+    ; (function () {
+        function watch(obj, attrName, callback) {
+            var value = obj[attrName];
+            Object.defineProperty(obj, attrName, {
+                configutable: true,
+                enumerable: true,
+                get() {
+                    return value
+                },
+                set(newValue) {
+                    value = newValue;
+                    callback(newValue)
+                }
+            });
+            obj[attrName] = value;
+        }
+        window.watch = watch;
+    })();
+    function init() {
+        var container = document.getElementById('container');
+        var button = document.getElementById('button');
+        var obj = {
+            value: 1
+        };
+        watch(obj, 'value', function (newValue) {
+            container.innerHTML = newValue
+        });
+        button.addEventListener('click', () => {
+            obj.value++
+        }, false);
+    }
+    window.addEventListener('load', init, false);
+</script>
+
+</html>
