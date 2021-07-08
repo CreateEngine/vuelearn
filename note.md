@@ -26,6 +26,23 @@
         })
         ```
 2. Proxy
+   [参考文章](https://juejin.cn/post/6844904090116292616)
+   > var proxy = new Proxy(target,handler);
 
+   * `proxy 可以拦截多达13种操作`
+   * `proxy 与 reflect 同时使用`
+
+   ```javascript
+   var proxy = new Proxy({},{
+       get(obj,prop){
+           console.log('设置 get 操作')
+           return obj[prop]
+       },
+       set(obj,prop,value){
+           console.log('设置 set 操作')
+           obj[prop] = value;
+       }
+   })
+   ```
   
   

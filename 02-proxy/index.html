@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>proxy</title>
+</head>
+
+<body>
+  <script>
+   //简单的例子
+let  adc ={
+    'ad':90,
+    'ap':0,
+    'hp':500
+}
+
+const handler = {
+    get:(obj,prop)=>{
+        console.log("adc",prop)
+        return obj[prop]
+    },
+    set:(obj,prop,value)=>{
+        console.log(`设置adc的${prop}属性为:${value}`)
+        obj[prop] = value
+    }
+}
+
+const adcProxy = new Proxy(adc,handler)
+adcProxy.ad //adc ad
+adcProxy['ad'] = 100 //设置adc的ad属性为:100
+
+//模拟vue中的data
+var _vm = {
+    data(){
+        return{
+            a:'1',
+            b:'2',
+            c:'3'
+        }
+    }
+}
+console.log(_vm.data().a) //正常的输出
+var vm = new Proxy(_vm,{
+    get:(obj,prop)=>{
+        return obj.data()[prop]
+    },
+    set:(obj,prop,value)=>{
+        obj.data()[prop] = value
+    }
+})
+
+console.log(vm.a)
+
+//缓存代理
+const getFib = number=>{
+    if (number<=2){
+        return 1;
+    }else{
+        return getFib(number-1) +getFib(number -2)
+    }
+}
+const getFibCacheProxy = (fn,cache= new Map())=> {
+    return new Proxy(fn,{
+        apply(obj,context,args){
+            console.log(context)
+            const argsString = args.join(' ');
+            if (cache.has(argsString)){
+                console.log('从缓存中获取')
+                return cache.get(argsString)
+            };
+            const result = fn(...args)
+            cache.set(argsString,result);
+            return result;
+        }
+    })
+}
+const getFibProxy = getFibCacheProxy(getFib)
+console.log(getFibProxy(20))
+console.log(getFibProxy(20))
+
+console.log('adhgc' in adc)
+console.log(Reflect.has(adc,'ad'))
+  </script>
+</body>
+
+</html>
