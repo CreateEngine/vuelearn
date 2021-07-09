@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>vue响应式</title>
+</head>
+
+<body>
+  <script>
+    function observe(value, cb) {
+      Object.keys(value).forEach((key) => defineReactive(value, key, value[key], cb))
+    }
+
+    function defineReactive(obj, key, val, cb) {
+      console.log(arguments)
+      Object.defineProperty(obj, key, {
+        enumerable: true,
+        configurable: true,
+        get: () => {
+          /*....依赖收集等....*/
+          /*Github:https://github.com/answershuto*/
+          return val
+        },
+        set: newVal => {
+          val = newVal;
+          cb();/*订阅者收到消息的回调*/
+        }
+      })
+    }
+
+    class Vue {
+      constructor(options) {
+        this._data = options.data;
+        console.log(this._data);
+        observe(this._data, options.render);
+      }
+    }
+
+    let app = new Vue({
+      el: '#app',
+      data: {
+        text: 'text',
+        text2: 'text2'
+      },
+      render() {
+        console.log("render");
+      }
+    })
+
+  </script>
+</body>
+
+</html>
