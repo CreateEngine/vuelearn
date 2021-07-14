@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>插槽</title>
+</head>
+
+<body>
+  <div id="app">
+    <base-layout type="template">
+      <template v-slot:header>
+        <h1>Here might be a page title</h1>
+      </template>
+      <template v-slot:footer>
+        <p>Here's some contact info</p>
+      </template>
+    </base-layout>
+  </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+  const baseLayout = {
+    template: `<div class="container">
+  <header>
+    <slot name="header"></slot>
+    <p>type:{{type}}</p>
+    Logged in as {{ user.name }}
+  </header>
+  <main>
+    <slot>default content</slot>
+  </main>
+  <footer>
+    <slot name="footer"></slot>
+  </footer>
+</div>`,
+    props: {
+      type: '',
+    },
+    data(){
+      return{
+        user:{
+          name:'sf'
+        }
+      }
+    }
+  }
+  const submitButton ={
+    template:`<button type="submit"><slot name="header"></slot><slot>Submit</slot></button>`
+  }
+  let app = new Vue({
+    el: '#app',
+    components: {
+      baseLayout,
+      submitButton
+    },
+  })
+</script>
+
+</html>
