@@ -14,41 +14,52 @@
       <template v-slot:header>
         <h1>Here might be a page title</h1>
       </template>
+      <template v-slot:userName>
+        {{user.name}}
+      </template>
       <template v-slot:footer>
         <p>Here's some contact info</p>
       </template>
     </base-layout>
-  </div>
+    <submit-button>
+      <template v-slot:default="slotProps">
+        {{ slotProps.user.name }}
+      </template>
+    </submit-button>
+    </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script>
   const baseLayout = {
     template: `<div class="container">
-  <header>
-    <slot name="header"></slot>
-    <p>type:{{type}}</p>
-    Logged in as {{ user.name }}
-  </header>
-  <main>
-    <slot>default content</slot>
-  </main>
-  <footer>
-    <slot name="footer"></slot>
-  </footer>
-</div>`,
+                <header>
+                  <slot name="header"></slot>
+                  <p>type:{{type}}</p>
+                  Logged in as {{ sf }}
+                </header>
+                <main>
+                  <slot>default content{{sf}}</slot>
+                  <slot name="userName">
+                  <div>userName:{{sf}}</div>
+                  </slot>
+                </main>
+                <footer>
+                  <slot name="footer"></slot>
+                </footer>
+              </div>`,
     props: {
       type: '',
     },
-    data(){
-      return{
-        user:{
-          name:'sf'
-        }
+    data() {
+      return {
+        sf: 'shifeng'
       }
     }
   }
-  const submitButton ={
-    template:`<button type="submit"><slot name="header"></slot><slot>Submit</slot></button>`
+  const submitButton = {
+    template: `<button type="submit">
+                <slot v-bind:user="user">{{ user.name }}</slot>
+              </button>`
   }
   let app = new Vue({
     el: '#app',
@@ -56,6 +67,13 @@
       baseLayout,
       submitButton
     },
+    data() {
+      return {
+        user: {
+          name: 'sf'
+        }
+      }
+    }
   })
 </script>
 
