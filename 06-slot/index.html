@@ -1,80 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>插槽</title>
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>插槽</title>
-</head>
-
-<body>
-  <div id="app">
-    <base-layout type="template">
-      <template v-slot:header>
-        <h1>Here might be a page title</h1>
-      </template>
-      <template v-slot:userName>
-        {{user.name}}
-      </template>
-      <template v-slot:footer>
-        <p>Here's some contact info</p>
-      </template>
-    </base-layout>
-    <submit-button>
-      <template v-slot:default="slotProps">
-        {{ slotProps.user.name }}
-      </template>
-    </submit-button>
+  <body>
+    <div id="app">
+      <base-layout type="template">
+        <template #header>
+          <h1>插槽标题</h1>
+        </template>
+        <template #childScope></template>
+        <div @click="consoleFather">父组件data:{{fatherName}}</div>
+        <template #footer="slotScope">slotScope获取子组件data:{{slotScope.sf}}</template>
+        <template #sf="{sf}">slotScope结构赋值:{{sf}}</template>
+      </base-layout>
+      <div v-for="(item,index) in [0,1,2]" @click="setDynamicSlotName(item)">
+        <dynamic-slot>
+          <template v-slot:[dynamicslotname]>
+            <span>{{item}}</span>
+          </template>
+        </dynamic-slot>
+      </div>
     </div>
-</body>
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-<script>
-  const baseLayout = {
-    template: `<div class="container">
+  </body>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script>
+    const baseLayout = {
+      template: `<div class="container">
                 <header>
                   <slot name="header"></slot>
-                  <p>type:{{type}}</p>
-                  Logged in as {{ sf }}
+                  <hr/>
                 </header>
                 <main>
-                  <slot>default content{{sf}}</slot>
-                  <slot name="userName">
-                  <div>userName:{{sf}}</div>
-                  </slot>
+                  <div>我来自于父组件的prop:{{type}}</div>
+                  <hr/>
+                  <slot name="childScope">我是子组件的data:{{sf}}</slot>
+                  <hr/>
+                  <slot>default content</slot>
+                  <hr/>
                 </main>
                 <footer>
-                  <slot name="footer"></slot>
+                  <slot name="footer" v-bind:sf="sf"></slot>
+                  <hr/>
+                  <slot name="sf" v-bind:sf="sf"></slot>
+                  <hr/>
                 </footer>
               </div>`,
-    props: {
-      type: '',
-    },
-    data() {
-      return {
-        sf: 'shifeng'
-      }
-    }
-  }
-  const submitButton = {
-    template: `<button type="submit">
-                <slot v-bind:user="user">{{ user.name }}</slot>
-              </button>`
-  }
-  let app = new Vue({
-    el: '#app',
-    components: {
-      baseLayout,
-      submitButton
-    },
-    data() {
-      return {
-        user: {
-          name: 'sf'
-        }
-      }
-    }
-  })
-</script>
+      props: {
+        type: "",
+      },
+      data() {
+        return {
+          sf: "shifeng",
+          name: "child",
+        };
+      },
+    };
 
+    const dynamicSlot ={
+      template:`<div>
+        <slot name="0">0s</slot>
+        <slot name="1">1a</slot>
+        <slot name="2">2d</slot>
+        </div>`
+    }
+    let app = new Vue({
+      el: "#app",
+      components: {
+        baseLayout,
+        dynamicSlot,
+      },
+      data() {
+        return {
+          fatherName: "father",
+          dynamicslotname:'0',
+        };
+      },
+      methods: {
+        consoleFather() {
+          console.log(this.fatherName);
+        },
+        setDynamicSlotName(item){
+          this.dynamicslotname = item;
+        }
+      },
+    });
+  </script>
 </html>
