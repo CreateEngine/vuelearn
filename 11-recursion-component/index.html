@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>迭代组件</title>
+  </head>
+  <body>
+    <div id="app">
+      <recursion-component :list="list"></recursion-component>
+    </div>
+  </body>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script>
+    const recursionComponent = {
+      name: "recursionComponent",
+      props: {
+        list: Array,
+      },
+      template: ` <ul>
+    <li v-for="(item,index) in list " :key="index">
+      <p>{{item.name}}</p>
+      <recursion-component :list="item.cList"></recursion-component>
+    </li>
+  </ul>`,
+    };
+    var app = new Vue({
+      el: "#app",
+      data: {
+        message: "inject",
+      },
+      data() {
+        return {
+          list: [
+            {
+              name: "一级菜单-1",
+              cList: [
+                { name: "二级菜单-1.1" },
+                {
+                  name: "二级菜单-1.2",
+                  cList: [
+                    {
+                      name: "三级菜单-1.2.1",
+                      cList: [{ name: "四级级菜单-1.2.1.1" }],
+                    },
+                  ],
+                },
+              ],
+            },
+            { name: "一级菜单-2" },
+            {
+              name: "一级菜单-3",
+              cList: [{ name: "二级菜单-3.1" }, { name: "二级菜单-3.2" }],
+            },
+          ],
+        };
+      },
+      components: {
+        recursionComponent,
+      },
+    });
+  </script>
+</html>
