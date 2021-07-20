@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <div id="app">
+    <div id="app" @click="hello">
         {{message}}
     </div>
 </body>
@@ -22,6 +22,11 @@
             Promise.resolve().then(res=>{
                 console.log('组件后混入调用！') 
             })
+        },
+        methods:{
+            hello(){
+                console.log('myMixin')
+            }
         }
     }
     var app = new Vue({
@@ -33,6 +38,11 @@
         created() {
             console.log(this.message)
         },
+        methods:{
+            hello(){
+                console.log('hello mixin component')
+            }
+        }
     })
 </script>
 
