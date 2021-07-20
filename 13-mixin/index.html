@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>混入mixin</title>
+</head>
+
+<body>
+    <div id="app">
+        {{message}}
+    </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+    var myMixin = {
+        created() {
+            console.log('组件前混入调用！')
+            // 利用事件队列处理先后顺序
+            Promise.resolve().then(res=>{
+                console.log('组件后混入调用！') 
+            })
+        }
+    }
+    var app = new Vue({
+        mixins: [myMixin],
+        el: '#app',
+        data: {
+            message: 'hello mixin!'
+        },
+        created() {
+            console.log(this.message)
+        },
+    })
+</script>
+
+</html>
