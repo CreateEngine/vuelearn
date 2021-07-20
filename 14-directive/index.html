@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>指令directive</title>
+</head>
+
+<body>
+  <div id="app">
+    <input v-focus>
+    <div v-border>border directive</div>
+    <input v-model="fontColor" />
+    <div v-border>border directive</div>
+    <div v-color="{color:fontColor}">font color</div>
+  </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+  // 注册一个全局自定义指令 `v-focus`
+  Vue.directive('focus', {
+    // 当被绑定的元素插入到 DOM 中时……
+    inserted(el) {
+      // 聚焦元素
+      el.focus()
+    }
+  })
+  var app = new Vue({
+    el: '#app',
+    data: {
+      fontColor: '#333333';
+    },
+    directives: {
+      border: {
+        inserted(el) {
+          el.style.border = "1px solid #333333";
+        }
+      },
+      color(el, binding, vnode) {
+        el.style.color = binding.value.color;
+      }
+    }
+  })
+</script>
+
+</html>
