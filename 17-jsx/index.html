@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>jsx</title>
+  </head>
+
+  <body>
+    <div id="app">
+      <anchored-heading :level="1">Hello world!</anchored-heading>
+      <anchored-heading :level="2">Hello world!</anchored-heading>
+      <anchored-heading :level="3">Hello world!</anchored-heading>
+      <anchored-heading :level="4">Hello world!</anchored-heading>
+      <anchored-heading :level="5">Hello world!</anchored-heading>
+      <anchored-heading :level="6">Hello world!</anchored-heading>
+    </div>
+  </body>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script>
+    Vue.component("anchored-heading", {
+      render: function (createElement) {
+        return createElement(
+          "h" + this.level, // 标签名称
+          {
+            attrs: {
+              innerHTML: "baz",
+              id: "demo",
+            },
+          },
+          [this.$slots.default] // 子节点数组
+        );
+      },
+      props: {
+        level: {
+          type: Number,
+          required: true,
+        },
+      },
+    });
+    var app = new Vue({
+      el: "#app",
+    });
+  </script>
+</html>
