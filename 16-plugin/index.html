@@ -4,17 +4,29 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>插件</title>
   </head>
   <body>
     <div id="app">{{message}}</div>
   </body>
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <script>
+    const MyPlugin = {};
+    MyPlugin.install = function (Vue, options) {
+      // 1. 添加全局方法或 property
+      Vue.myGlobalMethod = function () {
+        console.log("hello Plugin");
+      };
+    };
+    //  使用插件
+    Vue.use(MyPlugin);
     var app = new Vue({
       el: "#app",
       data: {
         message: "See Vue again!",
+      },
+      created() {
+        Vue.myGlobalMethod();
       },
     });
   </script>
